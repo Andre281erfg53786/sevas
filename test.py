@@ -28,7 +28,7 @@ def echo_all(message):
 
     def return_to_menu (chat.id):
         starter.set_state(message.chat.id , fsm.DEFULT_STATE)
-        bot.send_message(message.chat.id, text='Ввидете описание фото.' , reply_markup=keyboards.MainKeyboard)dddgit add .
+        bot.send_message(message.chat.id, text='Ввидете описание фото.' , reply_markup=keyboards.MainKeyboard)
 
 
 
