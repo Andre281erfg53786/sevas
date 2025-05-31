@@ -2,11 +2,25 @@ import telebot
 import keyboards
 import fsm
 import ai
+import loguru
+import yaml
+import sys
 
-BOT_TOKEN = '7740470916:AAEqWao7o1IdaL-dtnta99HS8gj6KR6nmVI' 
+logger = loguru.
+
+try:
+     with open("./config.yaml" , 'r') as file:
+          cfg = yaml.safe_load(file)
+          logger.inf('Успешно загружаем конфиг')
+except Exception as e:
+     logger.warning('Произошла ошибка при загрузке конфига ({})' , str(e))
+     sys.exit(1)
+
+BOT_TOKEN = cfg['telegram_token']
 starter = fsm.FSM()
-ai_service = ai.AI()
+ai_service = ai.AI(cfg)
 bot = telebot.TeleBot(BOT_TOKEN)
+
 
 def return_to_menu (chat_id):
         starter.set_state(chat_id , fsm.DEFULT_STATE)
@@ -49,6 +63,15 @@ def echo_all(message):
     msg_text = message.text
     state = starter.get_state(message.chat.id)
     
+    logger.info(
+        "Пользователь [ {} : {}] отправил сообщение '{}' в состоянии {}" ,
+         message.chat.id,
+         message.from_user.first_name,
+         message.text,
+         state
+    )
+
+
     if state == fsm.DEFULT_STATE:
         hadel_default_state(message)
     elif state == fsm.IMAGE_STATE:
